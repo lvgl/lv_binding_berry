@@ -20,6 +20,7 @@ extern int lv_x_member(bvm *vm);
 extern int lv_x_tostring(bvm *vm);       // generic function
 
 extern int lv_be_style_init(bvm *vm);
+extern int lv_be_anim_init(bvm *vm);
 extern int lv_x_tostring(bvm *vm);
 
 BE_EXPORT_VARIABLE extern const bclass be_class_lv_obj;
@@ -693,6 +694,42 @@ extern int lvbe_spinbox_decrement(bvm *vm);
 /* `lv_spinner` external functions definitions */
 extern int lvbe_spinner_create(bvm *vm);
 
+/* `lv_anim` external functions definitions */
+extern int lvbe_anim_init(bvm *vm);
+extern int lvbe_anim_set_var(bvm *vm);
+extern int lvbe_anim_set_exec_cb(bvm *vm);
+extern int lvbe_anim_set_time(bvm *vm);
+extern int lvbe_anim_set_delay(bvm *vm);
+extern int lvbe_anim_set_values(bvm *vm);
+extern int lvbe_anim_set_custom_exec_cb(bvm *vm);
+extern int lvbe_anim_set_path_cb(bvm *vm);
+extern int lvbe_anim_set_start_cb(bvm *vm);
+extern int lvbe_anim_set_get_value_cb(bvm *vm);
+extern int lvbe_anim_set_ready_cb(bvm *vm);
+extern int lvbe_anim_set_playback_time(bvm *vm);
+extern int lvbe_anim_set_playback_delay(bvm *vm);
+extern int lvbe_anim_set_repeat_count(bvm *vm);
+extern int lvbe_anim_set_repeat_delay(bvm *vm);
+extern int lvbe_anim_set_early_apply(bvm *vm);
+extern int lvbe_anim_set_user_data(bvm *vm);
+extern int lvbe_anim_start(bvm *vm);
+extern int lvbe_anim_get_delay(bvm *vm);
+extern int lvbe_anim_get_playtime(bvm *vm);
+extern int lvbe_anim_get_user_data(bvm *vm);
+extern int lvbe_anim_custom_del(bvm *vm);
+extern int lvbe_anim_custom_get(bvm *vm);
+
+/* `lv_timer` external functions definitions */
+extern int lvbe_timer_del(bvm *vm);
+extern int lvbe_timer_pause(bvm *vm);
+extern int lvbe_timer_resume(bvm *vm);
+extern int lvbe_timer_set_cb(bvm *vm);
+extern int lvbe_timer_set_period(bvm *vm);
+extern int lvbe_timer_ready(bvm *vm);
+extern int lvbe_timer_set_repeat_count(bvm *vm);
+extern int lvbe_timer_reset(bvm *vm);
+extern int lvbe_timer_get_next(bvm *vm);
+
 /* `lv_arc` external functions definitions */
 extern int lvbe_arc_create(bvm *vm);
 extern int lvbe_arc_set_start_angle(bvm *vm);
@@ -919,6 +956,8 @@ extern int be_ntv_lv_meter_init(bvm *vm);
 extern int be_ntv_lv_msgbox_init(bvm *vm);
 extern int be_ntv_lv_spinbox_init(bvm *vm);
 extern int be_ntv_lv_spinner_init(bvm *vm);
+extern int be_ntv_lv_anim_init(bvm *vm);
+extern int be_ntv_lv_timer_init(bvm *vm);
 extern int be_ntv_lv_arc_init(bvm *vm);
 extern int be_ntv_lv_bar_init(bvm *vm);
 extern int be_ntv_lv_btn_init(bvm *vm);
@@ -934,6 +973,7 @@ extern int be_ntv_lv_switch_init(bvm *vm);
 extern int be_ntv_lv_table_init(bvm *vm);
 extern int be_ntv_lv_textarea_init(bvm *vm);
 
+extern const bclass be_class_lv_anim;
 extern const bclass be_class_lv_arc;
 extern const bclass be_class_lv_bar;
 extern const bclass be_class_lv_btn;
@@ -965,6 +1005,7 @@ extern const bclass be_class_lv_switch;
 extern const bclass be_class_lv_table;
 extern const bclass be_class_lv_textarea;
 extern const bclass be_class_lv_theme;
+extern const bclass be_class_lv_timer;
 
 
 /********************************************************************
@@ -975,12 +1016,12 @@ be_local_class(lv_style,
     NULL,
     be_nested_map(4,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(lv_be_style_init) },
-        { be_nested_key("tostring", -1995258651, 8, -1), be_const_func(lv_x_tostring) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
-        { be_nested_key("member", 719708611, 6, 0), be_const_func(lv_x_member) },
+        { be_const_key(member, -1), be_const_func(lv_x_member) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(init, 0), be_const_func(lv_be_style_init) },
     })),
-    (be_nested_const_str("lv_style", -143355747, 8))
+    (be_str_literal("lv_style"))
 );
 /*******************************************************************/
 
@@ -992,13 +1033,13 @@ be_local_class(lv_obj,
     NULL,
     be_nested_map(5,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("tostring", -1995258651, 8, 3), be_const_func(lv_x_tostring) },
-        { be_nested_key("member", 719708611, 6, -1), be_const_func(lv_x_member) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
-        { be_nested_key("init", 380752755, 4, 4), be_const_func(be_ntv_lv_obj_init) },
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_obj_class) },
+        { be_const_key(_class, 3), be_const_comptr(&lv_obj_class) },
+        { be_const_key(member, -1), be_const_func(lv_x_member) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(tostring, 4), be_const_func(lv_x_tostring) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_obj_init) },
     })),
-    (be_nested_const_str("lv_obj", -37134147, 6))
+    (be_str_literal("lv_obj"))
 );
 /*******************************************************************/
 
@@ -1010,12 +1051,12 @@ be_local_class(lv_group,
     NULL,
     be_nested_map(4,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_group_init) },
-        { be_nested_key("tostring", -1995258651, 8, -1), be_const_func(lv_x_tostring) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
-        { be_nested_key("member", 719708611, 6, 0), be_const_func(lv_x_member) },
+        { be_const_key(member, -1), be_const_func(lv_x_member) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(init, 0), be_const_func(be_ntv_lv_group_init) },
     })),
-    (be_nested_const_str("lv_group", -442928277, 8))
+    (be_str_literal("lv_group"))
 );
 /*******************************************************************/
 
@@ -1027,12 +1068,12 @@ be_local_class(lv_indev,
     NULL,
     be_nested_map(4,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(lv0_init) },
-        { be_nested_key("tostring", -1995258651, 8, -1), be_const_func(lv_x_tostring) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
-        { be_nested_key("member", 719708611, 6, 0), be_const_func(lv_x_member) },
+        { be_const_key(member, -1), be_const_func(lv_x_member) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(init, 0), be_const_func(lv0_init) },
     })),
-    (be_nested_const_str("lv_indev", 225602374, 8))
+    (be_str_literal("lv_indev"))
 );
 /*******************************************************************/
 
@@ -1044,12 +1085,46 @@ be_local_class(lv_disp,
     NULL,
     be_nested_map(4,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(lv0_init) },
-        { be_nested_key("tostring", -1995258651, 8, -1), be_const_func(lv_x_tostring) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
-        { be_nested_key("member", 719708611, 6, 0), be_const_func(lv_x_member) },
+        { be_const_key(member, -1), be_const_func(lv_x_member) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(init, 0), be_const_func(lv0_init) },
     })),
-    (be_nested_const_str("lv_disp", 609712084, 8))
+    (be_str_literal("lv_disp"))
+);
+/*******************************************************************/
+
+/********************************************************************
+** Solidified class: lv_timer
+********************************************************************/
+be_local_class(lv_timer,
+    1,
+    NULL,
+    be_nested_map(4,
+    ( (struct bmapnode*) &(const bmapnode[]) {
+        { be_const_key(member, -1), be_const_func(lv_x_member) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(init, 0), be_const_func(lv0_init) },
+    })),
+    be_str_literal("lv_timer")
+);
+/*******************************************************************/
+
+/********************************************************************
+** Solidified class: lv_anim
+********************************************************************/
+be_local_class(lv_anim,
+    1,
+    NULL,
+    be_nested_map(4,
+    ( (struct bmapnode*) &(const bmapnode[]) {
+        { be_const_key(member, -1), be_const_func(lv_x_member) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(init, 0), be_const_func(lv_be_anim_init) },
+    })),
+    be_str_literal("lv_anim")
 );
 /*******************************************************************/
 
@@ -1061,11 +1136,11 @@ be_local_class(lv_font,
     NULL,
     be_nested_map(3,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(lvbe_font_create) },
-        { be_nested_key("tostring", -1995258651, 8, -1), be_const_func(lv_x_tostring) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
+        { be_const_key(init, -1), be_const_func(lvbe_font_create) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
     })),
-    (be_nested_const_str("lv_font", 1550958453, 7))
+    (be_str_literal("lv_font"))
 );
 /*******************************************************************/
 
@@ -1077,11 +1152,11 @@ be_local_class(lv_theme,
     NULL,
     be_nested_map(3,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(lvbe_theme_create) },
-        { be_nested_key("tostring", -1995258651, 8, -1), be_const_func(lv_x_tostring) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
+        { be_const_key(init, -1), be_const_func(lvbe_theme_create) },
+        { be_const_key(tostring, -1), be_const_func(lv_x_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
     })),
-    (be_nested_const_str("lv_theme", 1550958453, 7))
+    (be_str_literal("lv_theme"))
 );
 /*******************************************************************/
 
@@ -1093,12 +1168,12 @@ be_local_class(lv_color,
     NULL,
     be_nested_map(4,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("toint", -681784387, 5, -1), be_const_func(lco_toint) },
-        { be_nested_key("tostring", -1995258651, 8, 0), be_const_func(lco_tostring) },
-        { be_nested_key("_p", 1594591802, 2, -1), be_const_var(0) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(lco_init) },
+        { be_const_key(toint, -1), be_const_func(lco_toint) },
+        { be_const_key(tostring, 0), be_const_func(lco_tostring) },
+        { be_const_key(_p, -1), be_const_var(0) },
+        { be_const_key(init, -1), be_const_func(lco_init) },
     })),
-    (be_nested_const_str("lv_color", 1419148319, 8))
+    (be_str_literal("lv_color"))
 );
 /*******************************************************************/
 
@@ -1135,10 +1210,10 @@ be_local_class(lv_img,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_img_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_img_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_img_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_img_init) },
     })),
-    (be_nested_const_str("lv_img", 1612829968, 6))
+    (be_str_literal("lv_img"))
 );
 /*******************************************************************/
 
@@ -1181,10 +1256,10 @@ be_local_class(lv_chart,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_chart_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_chart_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_chart_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_chart_init) },
     })),
-    (be_nested_const_str("lv_chart", 1612829968, 6))
+    (be_str_literal("lv_chart"))
 );
 /*******************************************************************/
 
@@ -1203,10 +1278,10 @@ be_local_class(lv_colorwheel,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_colorwheel_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_colorwheel_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_colorwheel_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_colorwheel_init) },
     })),
-    (be_nested_const_str("lv_colorwheel", 1612829968, 6))
+    (be_str_literal("lv_colorwheel"))
 );
 /*******************************************************************/
 
@@ -1225,10 +1300,10 @@ be_local_class(lv_imgbtn,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_imgbtn_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_imgbtn_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_imgbtn_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_imgbtn_init) },
     })),
-    (be_nested_const_str("lv_imgbtn", 1612829968, 6))
+    (be_str_literal("lv_imgbtn"))
 );
 /*******************************************************************/
 
@@ -1247,10 +1322,10 @@ be_local_class(lv_led,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_led_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_led_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_led_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_led_init) },
     })),
-    (be_nested_const_str("lv_led", 1612829968, 6))
+    (be_str_literal("lv_led"))
 );
 /*******************************************************************/
 
@@ -1269,10 +1344,10 @@ be_local_class(lv_meter,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_meter_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_meter_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_meter_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_meter_init) },
     })),
-    (be_nested_const_str("lv_meter", 1612829968, 6))
+    (be_str_literal("lv_meter"))
 );
 /*******************************************************************/
 
@@ -1291,10 +1366,10 @@ be_local_class(lv_msgbox,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_msgbox_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_msgbox_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_msgbox_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_msgbox_init) },
     })),
-    (be_nested_const_str("lv_msgbox", 1612829968, 6))
+    (be_str_literal("lv_msgbox"))
 );
 /*******************************************************************/
 
@@ -1313,10 +1388,10 @@ be_local_class(lv_spinbox,
     &be_class_lv_textarea,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_spinbox_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_spinbox_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_spinbox_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_spinbox_init) },
     })),
-    (be_nested_const_str("lv_spinbox", 1612829968, 6))
+    (be_str_literal("lv_spinbox"))
 );
 /*******************************************************************/
 
@@ -1335,16 +1410,28 @@ be_local_class(lv_spinner,
     &be_class_lv_arc,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_spinner_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_spinner_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_spinner_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_spinner_init) },
     })),
-    (be_nested_const_str("lv_spinner", 1612829968, 6))
+    (be_str_literal("lv_spinner"))
 );
 /*******************************************************************/
 
 void be_load_lv_spinner_class(bvm *vm) {
     be_pushntvclass(vm, &be_class_lv_spinner);
     be_setglobal(vm, "lv_spinner");
+    be_pop(vm, 1);
+}
+
+void be_load_lv_anim_class(bvm *vm) {
+    be_pushntvclass(vm, &be_class_lv_anim);
+    be_setglobal(vm, "lv_anim");
+    be_pop(vm, 1);
+}
+
+void be_load_lv_timer_class(bvm *vm) {
+    be_pushntvclass(vm, &be_class_lv_timer);
+    be_setglobal(vm, "lv_timer");
     be_pop(vm, 1);
 }
 
@@ -1357,10 +1444,10 @@ be_local_class(lv_arc,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_arc_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_arc_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_arc_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_arc_init) },
     })),
-    (be_nested_const_str("lv_arc", 1612829968, 6))
+    (be_str_literal("lv_arc"))
 );
 /*******************************************************************/
 
@@ -1379,10 +1466,10 @@ be_local_class(lv_bar,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_bar_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_bar_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_bar_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_bar_init) },
     })),
-    (be_nested_const_str("lv_bar", 1612829968, 6))
+    (be_str_literal("lv_bar"))
 );
 /*******************************************************************/
 
@@ -1401,10 +1488,10 @@ be_local_class(lv_btn,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_btn_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_btn_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_btn_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_btn_init) },
     })),
-    (be_nested_const_str("lv_btn", 1612829968, 6))
+    (be_str_literal("lv_btn"))
 );
 /*******************************************************************/
 
@@ -1423,10 +1510,10 @@ be_local_class(lv_btnmatrix,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_btnmatrix_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_btnmatrix_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_btnmatrix_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_btnmatrix_init) },
     })),
-    (be_nested_const_str("lv_btnmatrix", 1612829968, 6))
+    (be_str_literal("lv_btnmatrix"))
 );
 /*******************************************************************/
 
@@ -1445,10 +1532,10 @@ be_local_class(lv_canvas,
     &be_class_lv_img,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_canvas_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_canvas_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_canvas_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_canvas_init) },
     })),
-    (be_nested_const_str("lv_canvas", 1612829968, 6))
+    (be_str_literal("lv_canvas"))
 );
 /*******************************************************************/
 
@@ -1467,10 +1554,10 @@ be_local_class(lv_checkbox,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_checkbox_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_checkbox_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_checkbox_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_checkbox_init) },
     })),
-    (be_nested_const_str("lv_checkbox", 1612829968, 6))
+    (be_str_literal("lv_checkbox"))
 );
 /*******************************************************************/
 
@@ -1489,10 +1576,10 @@ be_local_class(lv_dropdown,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_dropdown_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_dropdown_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_dropdown_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_dropdown_init) },
     })),
-    (be_nested_const_str("lv_dropdown", 1612829968, 6))
+    (be_str_literal("lv_dropdown"))
 );
 /*******************************************************************/
 
@@ -1511,10 +1598,10 @@ be_local_class(lv_label,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_label_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_label_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_label_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_label_init) },
     })),
-    (be_nested_const_str("lv_label", 1612829968, 6))
+    (be_str_literal("lv_label"))
 );
 /*******************************************************************/
 
@@ -1533,10 +1620,10 @@ be_local_class(lv_line,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_line_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_line_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_line_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_line_init) },
     })),
-    (be_nested_const_str("lv_line", 1612829968, 6))
+    (be_str_literal("lv_line"))
 );
 /*******************************************************************/
 
@@ -1555,10 +1642,10 @@ be_local_class(lv_roller,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_roller_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_roller_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_roller_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_roller_init) },
     })),
-    (be_nested_const_str("lv_roller", 1612829968, 6))
+    (be_str_literal("lv_roller"))
 );
 /*******************************************************************/
 
@@ -1577,10 +1664,10 @@ be_local_class(lv_slider,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_slider_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_slider_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_slider_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_slider_init) },
     })),
-    (be_nested_const_str("lv_slider", 1612829968, 6))
+    (be_str_literal("lv_slider"))
 );
 /*******************************************************************/
 
@@ -1599,10 +1686,10 @@ be_local_class(lv_switch,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_switch_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_switch_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_switch_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_switch_init) },
     })),
-    (be_nested_const_str("lv_switch", 1612829968, 6))
+    (be_str_literal("lv_switch"))
 );
 /*******************************************************************/
 
@@ -1621,10 +1708,10 @@ be_local_class(lv_table,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_table_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_table_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_table_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_table_init) },
     })),
-    (be_nested_const_str("lv_table", 1612829968, 6))
+    (be_str_literal("lv_table"))
 );
 /*******************************************************************/
 
@@ -1643,10 +1730,10 @@ be_local_class(lv_textarea,
     &be_class_lv_obj,
     be_nested_map(2,
     ( (struct bmapnode*) &(const bmapnode[]) {
-        { be_nested_key("_class", -1562820946, 6, -1), be_const_comptr(&lv_textarea_class) },
-        { be_nested_key("init", 380752755, 4, -1), be_const_func(be_ntv_lv_textarea_init) },
+        { be_const_key(_class, -1), be_const_comptr(&lv_textarea_class) },
+        { be_const_key(init, -1), be_const_func(be_ntv_lv_textarea_init) },
     })),
-    (be_nested_const_str("lv_textarea", 1612829968, 6))
+    (be_str_literal("lv_textarea"))
 );
 /*******************************************************************/
 
